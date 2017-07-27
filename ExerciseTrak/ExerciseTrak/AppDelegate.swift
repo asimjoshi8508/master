@@ -1,8 +1,8 @@
 //
 //  AppDelegate.swift
-//  FoodTracker
+//  ExerciseTrak
 //
-//  Created by Asim Joshi on 6/22/17.
+//  Created by Asim Joshi on 7/26/17.
 //  Copyright © 2017 Asim Joshi. All rights reserved.
 //
 

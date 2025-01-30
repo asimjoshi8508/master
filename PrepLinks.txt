@@ -1,0 +1,15 @@
+### Full Prep Sheet Link
+
+- [Reddit Programming Wiki](https://github.com/avgspacelover/Reddit-wiki-programming)
+
+### Coding DSA
+
+- [30 Days SDE Sheet Practice by SamirPaulb](https://github.com/SamirPaulb/DSAlgo/tree/main/30-Days-SDE-Sheet-Practice)
+- [TyKurtz's Leetcode Gist](https://gist.github.com/tykurtz/3548a31f673588c05c89f9ca42067bc4)
+- [Grokking Leetcode: Smarter Way to Prepare](https://interviewnoodle.com/grokking-leetcode-a-smarter-way-to-prepare-for-coding-interviews-e86d5c9fe4e1)
+- [New Grokking Leetcode by Navidre](https://github.com/navidre/new_grokking_to_leetcode?tab=readme-ov-file)
+
+### System Design
+
+- [System Design Interview Survival Guide 2023](https://levelup.gitconnected.com/system-design-interview-survival-guide-2023-preparation-strategies-and-practical-tips-ba9314e6b9e3)
+- [Introduction to Architecture by Tian Pan](https://tianpan.co/notes/145-introduction-to-architecture)

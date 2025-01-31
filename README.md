@@ -56,3 +56,5 @@
 - API Gateway: https://lnkd.in/gnsJGJaM
 - Distributed Locking: https://lnkd.in/gRxNJwWE
 - Checksum: https://lnkd.in/ghNc5pfn
+
+More topics - https://www.hellointerview.com/learn/system-design/in-a-hurry/core-concepts

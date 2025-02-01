@@ -1,0 +1,54 @@
+System Design Concepts
+
+- Database Fundamentals
+	- Indexes - Hash Indexes, B+ Trees, LSM Trees with SS Tables
+	- Transactions - ACID BASE
+	- Row vs Column Storage
+- Data Serialization (Read again)
+- Replication
+	- Single Leader
+ 	- Synchronous vs Asynchronous
+	- Multi Leader
+		- Last Write Wins
+		- Storing Siblings
+		- Automatic Resolution
+	- Leaderless
+		- Replication Quorums - N Replicas, W write replicas, R read replicas -> N < W + R
+- Sharding
+	- Key Range
+	- Range of Key Hash
+	- Consistent Hashing
+	- Local Secondary Indexes (Read again)
+	- Global Secondary Indexes (Read again)
+		- Two Phase Commit
+		- Asynchronous GSI
+	- SQL vs NoSQL
+
+- Batch Processing
+	- Frameworks (Map reduce vs Spark read)
+
+- Stream Processing
+	- Producers & Consumers
+	- In-Memory Message Broker (In memory)
+	- Log Based Message Broker (On disk)
+	- Stateful Consumer Framework
+
+- Other Storages
+	- Search Indexes
+	- Distributed File System
+	- Graph Database
+	- Object Store
+	- Time Series Database
+	- GeoSpatial Indexes
+	- Coordination Services
+
+- Caching
+	- Write Through
+	- Write Around
+	- Write Back
+	- CDN
+
+- Load Balancing
+	- Fault Tolerance
+		- Active-Active
+		- Active-Passive

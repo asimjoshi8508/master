@@ -1,0 +1,79 @@
+Replication means copying data from one database node (often called a master or leader) to one or more other nodes (often called replicas or followers).
+This keeps the data on the replicas up to date with changes made on the main node.
+
+When we talk about synchronous vs. asynchronous replication, we’re describing how quickly replicas catch up (or stay in sync) with the main node.
+
+Synchronous Replication
+In synchronous replication, whenever you write data to the master node, that data must also be written (or acknowledged) to one or more replicas before the master node considers the transaction complete.
+
+In Simple Words:
+"Wait for your friend to copy your notes before you leave."
+You only finalize the update once the replica has confirmed it got the data.
+
+Pros:
+Strong Consistency:
+All nodes have the same up-to-date data at the end of each transaction.
+
+No Data Loss on Master Failure:
+Because the data is already safely stored on at least one replica.
+
+Cons:
+Higher Latency:
+You have to wait for the replica(s) to confirm writes, slowing things down.
+
+Potential Bottleneck:
+If replicas are slow or network is laggy, the master is forced to wait.
+
+Real-World Applications of Synchronous Replication
+Financial Transactions (e.g., Bank Databases)
+When you move money from one account to another, the bank needs to ensure no partial updates or missing data.
+
+Critical Systems (Air Traffic Control, Telecommunication)
+Failure or discrepancy is too costly or dangerous.
+
+High-Availability Clusters (e.g., PostgreSQL Synchronous Replication)
+Ensures that failover nodes always have up-to-date data.
+
+Asynchronous Replication
+In asynchronous replication, once the master node writes the data to itself, it immediately returns "success" to the client.
+The actual data transfer to replicas happens later (asynchronously). The master doesn’t wait for the replicas to confirm.
+
+In Simple Words:
+"Write your notes and let your friends copy them whenever they can. You don’t wait for them before leaving."
+
+Pros:
+Faster Writes (Lower Latency):
+The master doesn’t wait for replicas; clients get quick acknowledgments.
+
+Higher Throughput:
+Good for systems with heavy write loads.
+
+Cons:
+Potential Data Loss on Master Failure:
+If the master crashes before replicas catch up, some recent writes may be lost.
+
+Eventual Consistency:
+Replicas might not have latest data for a short time (they lag behind).
+
+Real-World Applications of Asynchronous Replication
+Social Media (e.g., Twitter, Facebook)
+It’s okay if a follower or secondary data center is slightly behind (seconds or minutes).
+
+Content Delivery Networks (CDNs)
+Edge servers eventually sync with origin servers for updates; not every edge needs the update instantly.
+
+Many E-commerce Websites
+Product listings, user sessions can tolerate a tiny delay in replication, offering fast site performance.
+
+Synchronous vs. Asynchronous – At a Glance
+Feature	Synchronous	Asynchronous
+Consistency	Strong (all nodes in sync)	Eventual (followers can lag behind)
+Performance	Slower writes (must wait)	Faster writes (no waiting)
+Risk of Data Loss	Minimal (if replicas are truly in sync)	Possible if master fails before replication
+Use Cases	Banking, critical systems	High traffic apps, social media, caching
+
+Final Thoughts
+Synchronous Replication = Safer, but Slower. Used where data integrity is crucial (e.g., banks).
+Asynchronous Replication = Faster, but Less Safe. Used where performance is key and a slight delay or small data loss risk is acceptable (e.g., social media, logging).
+
+In real-world systems, sometimes hybrid approaches are used—critical data might be synchronously replicated, while less critical data is replicated asynchronously for speed.

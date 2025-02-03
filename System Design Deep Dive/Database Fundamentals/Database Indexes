@@ -1,5 +1,10 @@
 Database Indexes
 
+A database index is like a shortcut to finding specific data in a large database, 
+much like an index in a book helps you quickly find the page for a topic instead of flipping through every page.
+Without an index, your database often has to scan the entire table (like reading every page of a book) just to answer a single query, 
+which can be very slow. With an index, the database can jump to the relevant information right away.
+
 1. Hash Indexes
 A hash index uses a hash function to quickly find where a specific record is stored.
 

@@ -1,0 +1,95 @@
+Database Indexes
+
+1. Hash Indexes
+A hash index uses a hash function to quickly find where a specific record is stored.
+
+How It Works (In Simple Terms)
+You hash a key (like username or product_id).
+The hash function returns a number (the “bucket”).
+The record is stored in (or pointed to by) that bucket.
+
+Example:
+Key: username = "alice"
+Hash function might convert "alice" to a number like 1734.
+We use that number to figure out which slot (bucket) in the index points to "alice"’s data.
+
+Great For:
+Equality lookups: WHERE username = 'alice'
+Fast single record retrieval.
+
+Not Good For:
+Range queries: WHERE amount BETWEEN 50 AND 100 (since hashing disrupts any order).
+
+Real-World Use:
+In-Memory Hash Indexes (e.g., Redis internal data structures).
+Some relational databases use hash indexes for quick lookups on columns with lots of repeated lookups by exact key.
+
+
+2. B+ Tree Indexes
+A B+ Tree is a type of balanced tree that keeps data sorted and allows range queries to be efficient as well as single lookups.
+
+How It Works (In Simple Terms)
+Data is sorted by key (e.g., ascending order of product_id).
+The tree is balanced, meaning every leaf is roughly the same distance from the root, so searches take O(log n) time.
+In a B+ Tree, all actual data references (or records) are in the leaf nodes, and intermediate nodes have pointers to child nodes to guide the search.
+
+Example:
+Searching for product_id = 150:
+Start at the root node, decide which branch to follow (e.g., 1–100, 101–200, 201–300).
+Move down the tree until you reach the leaf that contains or points to records for the 150 range.
+
+Great For:
+Range queries (like WHERE price < 1000).
+Sorted data (like ordering results by product_id).
+
+Not Good For:
+Extremely high write throughput where data is inserted in random order (it can handle it but might need more disk I/O).
+
+Real-World Use:
+Most relational databases (e.g., MySQL’s InnoDB, PostgreSQL) use B+ Tree indexes for primary and secondary keys.
+File systems like NTFS, HFS+ often use B+ Trees internally for directory structures.
+
+
+3. LSM Trees (Log-Structured Merge Trees) and SSTables
+An LSM Tree is designed for high write performance. Instead of updating data on disk immediately in sorted order, it writes changes to a log (in memory or a fast buffer) and periodically merges them into sorted files on disk (called SSTables or Sorted String Tables).
+
+How It Works (In Simple Terms)
+Write data in memory (in a structure like a balanced tree or skip list).
+Once in-memory data hits a threshold, flush it to disk as a sorted file (SSTable).
+For reads, you check recent in-memory data first, then check the sorted files on disk.
+Periodically, old SSTables get merged together to keep the data organized and remove duplicates.
+
+Example:
+A system constantly receiving sensor data (thousands of writes per second).
+Data is quickly appended to an in-memory structure.
+After a while, that chunk of data is sorted and written to a new SSTable file on disk.
+Queries look at current in-memory data + these SSTable files.
+
+Great For:
+High write throughput (inserts, updates).
+Big data scenarios (streaming writes).
+
+Not Good For:
+Queries that rely heavily on data spread across many SSTables (but systems often use Bloom filters and caching to optimize).
+
+Real-World Use:
+Apache Cassandra, HBase, ScyllaDB use LSM trees with SSTables for their data models.
+LevelDB, RocksDB (embedded storage engines) also implement LSM Trees under the hood.
+Great for NoSQL databases dealing with continuous, heavy writes (like logs, sensor data, etc.).
+
+Quick Comparison
+Index Type	Best For	Drawbacks	Real-World Example
+Hash Index	Fast equality lookups (WHERE id = 123)	Not good for ranges (WHERE id > 100)	Redis hash tables, some RDBMS for unique columns
+B+ Tree	Range queries, sorted data retrieval, general indexing	Not optimal for extremely heavy random writes	MySQL (InnoDB), PostgreSQL, file systems (NTFS, HFS+)
+LSM Tree + SSTables	High write throughput, big data, NoSQL workloads	Reading scattered data across many SSTables can be complex; merges needed	Cassandra, HBase, LevelDB, RocksDB
+
+In Summary
+Hash Indexes are simple and fast for direct lookups, but bad for ranges.
+B+ Trees are a workhorse for relational databases, supporting both direct lookups and range queries efficiently.
+LSM Trees with SSTables shine in high-write environments (like big data and NoSQL), where batching and merging data is more efficient than updating on disk in real-time.
+Each index type solves different problems in database performance and is chosen based on the workload (e.g., lots of writes vs. lots of range queries vs. direct lookups).
+
+💡 In short:
+Hash for quick “Is this key here?” lookups.
+B+ Tree for general-purpose queries, including ranges.
+LSM for massive, high-speed writes (NoSQL style).

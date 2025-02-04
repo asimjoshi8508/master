@@ -1,0 +1,71 @@
+Key range sharding is a way to split up (partition) data in a database by defining ranges of values (often called shards) for a specific key.
+Each shard handles only the data whose key falls within its range.
+
+For example, you might have one shard that stores user IDs from 1 to 1,000, another for 1,001 to 2,000, and so on.
+This helps spread data (and requests) across multiple servers.
+
+How Key Range Sharding Works
+Pick a Key (Partition Key)
+Choose a column or field (e.g., user_id, order_id, etc.) to decide how to divide data.
+
+Define Ranges
+Create shards by assigning ranges of that key.
+Example:
+Shard A: keys 1–1,000
+Shard B: keys 1,001–2,000
+Shard C: keys 2,001–3,000
+
+Store Data in the Appropriate Shard
+When a new record comes in, check its key.
+Place it on the shard where its key’s range matches.
+
+Access Data
+When reading or writing, the database figures out which shard holds that key range and sends the request there.
+
+Why Use Key Range Sharding?
+Scalability
+You can distribute data across multiple machines or servers to handle more load.
+
+Load Balancing
+Spreading out data prevents one server from becoming overwhelmed if the dataset is large.
+
+Easy to Understand
+Straightforward concept: "If the key is between X and Y, store it here."
+
+Efficient Range Queries
+If your application often queries contiguous ranges of keys (e.g., user IDs 1000–2000), it can be fast since data is located together on one shard.
+
+Challenges with Key Range Sharding
+Hotspots
+If many requests target a popular range, that shard (or server) gets overloaded.
+For example, if most new users have IDs in the newest range, you have a “hot” shard.
+
+Rebalancing
+If shards grow unevenly, you might need to adjust ranges (e.g., split a shard into smaller ranges). This can be complex and time-consuming.
+
+Uneven Distribution
+Natural distribution depends on how keys are distributed. If your key pattern is sequential (like timestamps), you may end up with one very busy shard.
+
+Real-World Applications
+User Databases (Social Networks)
+Large services (e.g., Facebook, Twitter) might partition user data by user ID ranges, storing each range on a different server.
+
+Order Processing (E-commerce)
+Orders could be partitioned by order_id or customer_id ranges.
+Helps handle large volumes of orders without overloading a single database.
+
+Time-Series Data (Logs, Analytics)
+Partition logs by time ranges (e.g., daily, monthly).
+A shard might store all logs for January, another for February, etc.
+
+Distributed Key-Value Stores (HBase, Bigtable)
+They split data ranges into “region” or “tablet” files.
+Each region handles a contiguous block of the key space (like A–M, N–Z).
+
+Summary
+Key range sharding: Split data by fixed ranges of a key (e.g., user IDs, timestamps).
+Pros: Easy to understand, good for range queries.
+Cons: Can cause hotspots if keys are not evenly distributed; rebalancing might be needed.
+Real-world usage: Social media (user data), e-commerce (order data), time-series logs, big data stores (HBase, Bigtable).
+
+In short: Key range sharding is an intuitive way to scale databases horizontally by dividing data based on key ranges—great for range queries but watch out for potential hotspots and uneven growth.

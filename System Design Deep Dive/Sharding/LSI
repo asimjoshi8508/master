@@ -1,0 +1,75 @@
+When we talk about LSI in a sharded database context—especially in Amazon DynamoDB—we’re referring to a Local Secondary Index that is stored alongside (in the same “shard” or “partition”) as the base table data. 
+In DynamoDB (which automatically shards data), an LSI simply creates an alternate way to sort or query items within the same partition key.
+
+Sharding (or partitioning) means the table’s data is split across multiple servers or partitions.
+LSI (Local Secondary Index) is a secondary view that re-sorts the data within each shard based on a different attribute (sort key), but keeps the same partition key as the main table.
+
+Why Use an LSI in a Sharded System?
+Multiple Query Patterns (on the same partition key)
+You might want to retrieve items by date sometimes, but by status or category at other times—all for the same user (partition key).
+
+Fast, Local Queries
+Because the LSI is “local,” the index is co-located with the base data in the same shard.
+No need to query across multiple shards for that partition key; it’s all in one place.
+
+Efficient Data Access
+For a given partition key, you can quickly scan or query by the LSI’s sort key without scanning the entire table.
+
+How “LSI on Sharding” Works (DynamoDB Example)
+Table is Sharded (Partitioned) by a Partition Key
+E.g., UserID is the partition key. DynamoDB’s internal hashing mechanism decides which partition holds each UserID.
+
+Local Secondary Index
+You define an LSI with the same partition key (UserID) but a different sort key.
+Example: Original table sort key is Timestamp; LSI sort key could be Category.
+
+Both Table and LSI Live in the Same Partition
+For UserID = 123, all items (and the LSI data for those items) are stored on the same shard.
+Whenever you write an item for UserID = 123, DynamoDB updates the main table and the LSI in that shard.
+
+Querying
+You can query the main table by UserID + Timestamp or use the LSI to query by UserID + Category.
+DynamoDB sends these queries to the single shard (partition) responsible for UserID = 123.
+
+Real-World Applications
+User Profiles or Accounts
+Partition Key: UserID
+Main Sort Key: LastActiveDate
+LSI Sort Key: AccountType (e.g., free vs. premium)
+Sharding Benefit: Each user’s data is in one partition, and you can quickly fetch all “premium” accounts for that user, or list them by LastActiveDate.
+
+E-Commerce Orders (Per Customer)
+Partition Key: CustomerID
+Main Sort Key: OrderDate
+LSI Sort Key: OrderStatus
+Sharding Benefit: All orders for a specific customer are on one shard. You can query by date or by order status (e.g., “shipped” vs. “pending”) using the LSI.
+
+IoT Sensor Readings (Per Device)
+Partition Key: DeviceID
+Main Sort Key: Timestamp
+LSI Sort Key: ReadingType (temperature, humidity, etc.)
+Sharding Benefit: Each device’s data lands in one shard. You can query by time or filter by reading type within that single partition.
+
+Key Advantages
+Fast Lookups Within the Same Partition: The table’s data and the LSI data are stored together—no need to fan out across multiple shards for the same partition key.
+Better Query Flexibility: You can sort or filter on a different field (Category, Status, etc.) without scanning the entire dataset.
+Automatic Management: In DynamoDB, you don’t do the “sharding” manually; the service handles splitting data and placing it on partitions. The LSI just “rides along” in the same partition.
+
+Things to Watch Out For
+Partition Key Distribution
+If your partition keys aren’t well distributed, you could end up with hot shards (one partition receiving most traffic).
+
+Size Limits
+Each shard has a 10GB limit (in DynamoDB) for both the table and any LSIs combined.
+
+Same Partition Key Only
+LSI can’t change the partition key—only the sort key. If you need a different partition key, that’s a Global Secondary Index (GSI).
+
+Summary
+LSI on sharding means you have a Local Secondary Index that’s stored and managed within the same partition as your table data. In Amazon DynamoDB, the table is sharded automatically based on the partition key, and each shard locally stores both the primary data and its LSI. This provides:
+
+Quick queries on different sort keys within a single partition.
+Scalable data distribution, since DynamoDB automatically splits partitions.
+A balance of flexibility (more than one sort key) and performance (no need to scan multiple shards for that partition’s data).
+
+Hence, “LSI on sharding” is great for apps that need multiple ways to sort/filter data per partition—like retrieving a user’s data by date or by category—while still benefiting from the auto-scaling and distributed nature of a sharded database.

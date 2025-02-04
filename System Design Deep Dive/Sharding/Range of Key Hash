@@ -1,0 +1,76 @@
+Range of key hash sharding is a way to split (shard) your data based on the hash of a key, rather than the key itself.
+After you hash each record’s key (e.g., user_id), you place it in a shard according to ranges of the resulting hash value.
+
+Why?
+If you used key range sharding directly (e.g., user IDs 1–1000 in Shard A, 1001–2000 in Shard B), you could get hotspots if most new users fall in the highest range.
+By hashing the key first, user IDs become more randomly distributed across the hash space, reducing hotspots.
+
+How It Works (Step-by-Step)
+Choose a Hash Function
+Something like MD5, SHA-1, or a simpler numeric hash that outputs a large integer.
+
+Hash Each Key
+For a key like user_id = 12345, compute hash(12345) → some big number.
+
+Define Ranges in the Hash Space
+The hash space could be from 0 to a large maximum (e.g., 2^32−1).
+Split it into shards:
+Shard A: 0 – 9999999
+Shard B: 10000000 – 19999999
+Shard C: 20000000 – 29999999
+etc.
+
+Store/Lookup Data
+When a new record arrives, compute its key’s hash and see which range it falls into.
+Reads do the same: hash the key, find the shard, get the data.
+
+Why Use "Range of Key Hash" Sharding?
+1. Avoid Hotspots (Better Load Distribution)
+Sequential keys (like time stamps or incrementing IDs) can overload a single shard in normal range sharding.
+Hashing randomizes the key distribution so no single shard becomes the “hot” spot.
+
+2. Simpler Than Fully Dynamic Consistent Hashing
+You can predefine hash ranges. If you add more shards, you can adjust the ranges.
+It’s often easier to reason about than more complex schemes like consistent hashing rings.
+
+3. Good for Large Scale
+Large systems that store billions of rows (e.g., user data, logs, product catalogs) can benefit from hashing to spread out the load.
+
+Real-World Applications
+Social Networks
+User IDs can be hashed so new user sign-ups aren’t always inserting into the highest ID range.
+Shards remain balanced as the user base grows.
+
+IoT Sensor Data
+If sensors send readings with time-based keys, direct range sharding could flood one shard.
+By hashing, each sensor’s data is distributed across multiple shards.
+
+E-Commerce Catalogs
+Product IDs might be sequential. If you launch many new products, a single range could see heavy writes.
+Hash-based sharding spreads product inserts (and queries) more evenly.
+
+Log Systems
+Log entries often have incrementing IDs (like auto-increment or timestamp).
+Hashing the ID ensures new logs go across different shards, preventing a single hot shard.
+
+Comparing "Range of Key Hash" vs. "Raw Key Range" Sharding
+Sharding Method	How Data is Divided	Pros	Cons
+Key Range Sharding	By actual key ranges (e.g., 1–1000)	Easy for range queries.	Risk of hotspots with sequential or skewed keys.
+Range of Key Hash	By hash(key) ranges	More balanced distribution (avoids hotspots).	Harder to do ordered range queries on hashed keys.
+Note: If you need queries like WHERE user_id > 1000 AND user_id < 2000, hashing disrupts that ordering. You’d have to query multiple shards or store additional indexes.
+
+Key Takeaways
+Hash Your Key
+This randomizes distribution, preventing one shard from becoming overloaded.
+
+Predefine Hash Ranges
+Each shard is responsible for a slice of the hash space.
+
+Scalability
+Add more shards by splitting or adjusting hash ranges as you grow.
+
+Trade-Off
+Range queries by the original key become harder since the natural order is lost.
+
+In short:
+Range of key hash sharding is a practical balance between simple range sharding (prone to hotspots) and more complex dynamic hashing. It’s widely used in systems needing high write throughput and balanced shards despite skewed or sequential keys.

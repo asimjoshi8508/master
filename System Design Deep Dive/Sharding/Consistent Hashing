@@ -1,0 +1,75 @@
+Consistent hashing sharding is a technique used in distributed systems to distribute data (or load) across multiple servers (or nodes) in a way that minimizes disruptions when servers are added or removed.
+
+Instead of having fixed “ranges” of keys, consistent hashing uses a circular hash ring.
+Both servers and data keys are placed on this ring via a hash function, and each key is assigned to the nearest server on the ring (moving clockwise).
+
+Why Use Consistent Hashing Sharding?
+Minimal Data Movement on Server Changes:
+If you add or remove a server, only a small fraction of the data (keys) needs to move.
+Contrast with simple “modulus” or “range” sharding, where most keys might get remapped.
+
+Better Load Distribution:
+If servers are spread evenly around the ring, data keys are also distributed more evenly among them.
+
+Scalability:
+You can easily scale up by adding more servers.
+The system re-balances itself without massive reshuffling.
+
+Fault Tolerance:
+If a server goes down, only the data that mapped to that server (and its small adjacent segment on the ring) needs remapping.
+
+How Consistent Hashing Sharding Works (Step by Step)
+Hash Function
+Both servers and data keys are passed through a hash function (e.g., MD5, SHA-1) to produce a numeric hash.
+
+Circular Ring
+Imagine these hash values placed on a circular ring (0 to some large number).
+Each server lands on the ring at a point determined by hash(server_id).
+Each data key lands at a point determined by hash(key).
+
+Assign Keys to Nearest Server
+Moving clockwise on the ring from the key’s position, the first server you encounter is the home for that key.
+That server (and possibly its replicas) store the data associated with that key.
+
+Adding or Removing Servers
+If a new server is added, it takes over some keys from the next server(s) on the ring.
+If a server is removed, its keys get taken by the next server(s), so only those segments change hands.
+
+Simple Example
+Suppose you have 3 servers: A, B, C. You hash “A”, “B”, “C” to points on the ring.
+When a data key “ItemX” is hashed, we find its point on the ring. If “ItemX” lies between B and C (clockwise), then C is responsible for “ItemX.”
+If you add server D, it appears somewhere on the ring, taking keys from whichever segment it lands in. The others remain largely unaffected.
+
+Real-World Applications
+Caching (Memcached, Redis Clusters)
+Facebook and Twitter use consistent hashing to distribute cached objects across many cache servers.
+Adding or removing a cache server only affects a small set of cached keys rather than invalidating almost everything.
+
+Distributed Databases (Cassandra, DynamoDB)
+Cassandra places nodes and data keys on a ring for automatic load balancing and fault tolerance.
+DynamoDB uses a similar concept internally to manage partitions.
+
+CDN (Content Delivery Networks)
+Large CDNs like Cloudflare or Akamai route client requests based on a consistent hash of the user’s IP or requested content.
+This ensures sticky routing to the same edge server and easy rebalancing if an edge server is added or removed.
+
+Distributed File Systems (e.g., Ceph)
+Data blocks are hashed onto a ring to determine which node stores which block.
+Scaling or node failure triggers minimal data movement.
+
+Key Benefits and Trade-offs
+Benefits
+Minimal Data Movement: Only a small fraction of keys remap on topology changes.
+Scalable: Easy to add or remove nodes dynamically.
+Balanced Load (If Well-Configured): Typically, data is evenly spread across nodes.
+
+Trade-offs
+Implementation Complexity: More complex than simple “range” or “modulus” sharding.
+Hotspots Can Occur: If hash function or node distribution isn’t handled properly, you might still get uneven load.
+Virtual Nodes/Replicas Needed: To ensure better load distribution, many systems use virtual nodes per physical server.
+
+In Short
+Consistent Hashing Sharding uses a circular hash ring to distribute both servers and data.
+It shines in large, dynamic environments (like cache clusters, NoSQL databases, CDNs) where servers are frequently added or removed, ensuring stable and efficient data placement with minimal disruptions.
+
+Think of it like a round table with chairs for servers and seats for data—if one person leaves or a new person arrives, only the neighbors get shuffled around, not everyone at the table.

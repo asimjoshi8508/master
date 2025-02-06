@@ -1,0 +1,90 @@
+A time series database is designed to store and manage data points that are attached to timestamps.
+Rather than just storing rows of information (like a traditional relational database), a TSDB focuses on sequences of values over time—making it easy and efficient to record, retrieve, and analyze data that changes or accumulates as time progresses.
+
+How Time Series Databases Store Data
+Timestamp-Focused
+Each record is tagged with a time (e.g., 2025-10-11T10:45:00Z).
+Data is typically stored in chronological order.
+
+Series Organization
+Data is grouped into “series” (e.g., sensor readings from a particular sensor or metric).
+You might see terms like measurement, metric, or field referring to a specific value (e.g., temperature, CPU usage).
+
+Compression & Efficient Writes
+Many TSDBs use compression and specialized data structures optimized for appending (writing new data points quickly).
+They can handle massive write loads from thousands or millions of data sources.
+
+Metadata / Tags
+Time series data often has tags or labels that describe the data source.
+Example: For a temperature sensor, you might have location=“kitchen” and sensorID=“abc123”.
+
+Retention Policies
+Time series data can grow huge quickly. TSDBs often let you define retention policies (e.g., keep raw data for 7 days, then aggregate it monthly).
+
+Why Use a Time Series Database?
+Optimized for Time-Based Queries
+Queries like “What was the average CPU usage in the last hour?” or “What’s the temperature trend over the past week?” are fast, because the data is chronologically organized.
+
+High Ingest Rate
+IoT devices, sensors, and logs can produce millions of data points per second. TSDBs are built to handle continuous data streams efficiently.
+
+Specialized Functions
+Many TSDBs have built-in functions for aggregations, windowing (group by time windows), and downsampling (storing aggregated data over time).
+
+Scalability
+You can often distribute time series data across multiple nodes, scaling to very large data sets.
+
+Real-World Applications
+IoT Sensor Monitoring
+Example: A smart factory has temperature, vibration, and humidity sensors sending readings every second. A TSDB stores these readings for real-time dashboards and alerts.
+
+DevOps / System Monitoring
+Example: Tools like Prometheus or InfluxDB collect CPU usage, memory, network stats from servers.
+You query the TSDB to see spikes or trends in resource usage.
+
+Financial Market Data
+Example: Stock prices change every millisecond. Storing each price tick in a TSDB allows quick charting of historical trends or real-time analytics.
+
+Smart Energy Grids
+Example: Electricity usage measurements from thousands of homes, recorded every minute or hour. Utilities analyze load patterns and forecast demand.
+
+Application Logging (Event Data)
+Example: Log events with timestamps from a web application, stored in a TSDB to easily find spikes in error rates or user traffic.
+
+Scientific Research
+Example: Environmental sensors measuring air quality, or astronomical observations across time. Researchers query large volumes of time-tagged data.
+
+Popular Time Series Databases
+InfluxDB
+Focused on high write throughput, real-time queries, with its own query language (Flux/InfluxQL).
+Offers downsampling and retention policies out of the box.
+
+Prometheus
+Used in DevOps for monitoring containers, servers, etc.
+Pull-based model, frequently scrapes metrics from endpoints and stores them.
+
+TimescaleDB
+Built on PostgreSQL; adds time series superpowers (compression, partitioning).
+Great for mixing time series with relational queries.
+
+Graphite
+An older but still-used TSDB for system metrics, often used alongside statsd.
+
+OpenTSDB
+Built on top of HBase for distributed storage of large-scale time series data.
+
+Advantages & Drawbacks
+Advantages
+Fast time-based queries (optimized indexes).
+Handles massive data ingestion (common in IoT/monitoring).
+Built-in time-related functions (aggregations, rollups).
+
+Drawbacks
+Specialized solution (not always best for general-purpose data).
+Some TSDBs may require complex scaling setups.
+Need to define retention/archiving strategies to avoid huge storage costs.
+
+Summary
+A time series database is tailor-made for storing, querying, and analyzing data points that have timestamps—like sensor readings, server metrics, or financial ticks.
+They excel at handling high-volume streams of data arriving in chronological order, offering powerful time-based queries and efficient storage strategies (compression, retention policies).
+Real-world use cases include IoT monitoring, DevOps metrics, finance, and any scenario where you track changes over time.

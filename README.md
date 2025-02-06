@@ -10,7 +10,7 @@
 - [New Grokking Leetcode by Navidre](https://github.com/navidre/new_grokking_to_leetcode?tab=readme-ov-file)
 
 ### System Design
-
+- [System Design Interview IO](https://interviewing.io/guides/system-design-interview#how-to-use-this-guide)
 - [System Design Interview Survival Guide 2023](https://levelup.gitconnected.com/system-design-interview-survival-guide-2023-preparation-strategies-and-practical-tips-ba9314e6b9e3)
 - [Introduction to Architecture by Tian Pan](https://tianpan.co/notes/145-introduction-to-architecture)
 

@@ -1,0 +1,94 @@
+An object store (also called object storage) is a way of storing data as "objects", each containing the file’s data, some metadata, and a unique identifier.
+Unlike traditional file systems with folders and hierarchical paths, object stores treat all data as objects in a flat (or global) address space.
+
+Think of it like a giant online bucket where you drop files (objects).
+You don’t worry about folders or drives; you just have objects with unique IDs and metadata that tells you what they are.
+
+How Object Storage Works (Simple Terms)
+Objects Instead of Files
+Each piece of data is put into an object, which includes:
+Data (payload): The file’s contents (like an image or document).
+Metadata: Information about the file (e.g., creation time, content type).
+Unique ID: Often called a key or object name (e.g., file-123.png).
+
+Flat Namespace
+There’s no concept of directories like in a traditional file system.
+You just have a bucket (or container) with many objects in it.
+You access an object by its unique key (e.g., my-bucket/shirt.png).
+
+Scalability & Distribution
+Behind the scenes, the system can split your data across many servers.
+When you store an object, the system replicates it for durability (often across multiple data centers).
+
+Easy to Access via APIs
+Object stores typically expose a RESTful API—so you can upload, download, or list objects using standard HTTP methods.
+
+Why Use Object Storage?
+Massive Scalability
+Designed to handle billions of objects (like photos, videos, logs).
+
+Low Cost
+Optimized for storing large amounts of unstructured data at affordable prices.
+
+High Durability
+Data is usually replicated multiple times across servers or regions.
+
+Simple Access
+You can upload or retrieve an object from anywhere with an internet connection and the right permissions.
+
+Real-World Applications
+Cloud Backups and Archives
+Example: Amazon S3, Azure Blob Storage for storing backup files, snapshots, old data.
+Why? Cheap to store large volumes of data for long periods, with easy retrieval.
+
+Media Hosting and Streaming
+Example: Video or image files served from object storage.
+Companies store images, videos, audio on services like Amazon S3 or Google Cloud Storage, letting users access or stream them anywhere.
+
+Data Lakes and Big Data
+Example: Storing logs, sensor data as objects in a single “lake.”
+Tools like AWS Lake Formation or Azure Data Lake let analytics services (e.g., Hive, Spark) query directly from object storage.
+
+Web & Mobile App Content
+Example: Uploading user profile pictures or documents.
+App developers store user-generated content (photos, attachments) in object storage, then serve them via secure URLs.
+
+IoT Sensor Data
+Example: Billions of sensor readings from connected devices are pushed into an object store.
+The data remains there for machine learning or analytics later.
+
+Content Delivery Networks (CDN)
+Example: Cloudflare, Akamai, or AWS CloudFront fetching from your object bucket.
+Speeds up global delivery of static files.
+
+Popular Object Storage Services
+Amazon S3 (Simple Storage Service)
+One of the earliest and most used.
+Offers different storage classes (e.g., Standard, Glacier) for cost optimization.
+
+Microsoft Azure Blob Storage
+Similar functionality for storing blobs (Binary Large OBjects).
+Integrates well with other Azure services.
+
+Google Cloud Storage
+Offers multiple classes (Standard, Nearline, Coldline) to handle different access patterns.
+
+MinIO, Ceph, Swift (Open Source)
+For self-hosted object storage solutions on-premises or in your own data center.
+
+Benefits & Trade-Offs
+Benefits
+Infinite Scalability (practically).
+Resilience (automatic replication, versioning).
+Low Cost for large datasets.
+Simple Access via APIs.
+
+Drawbacks
+No Direct File System Semantics: Hard to do, for example, partial file edits.
+Higher Latency than local disk for small, frequent writes.
+Eventually Consistent in some implementations (though many provide strong consistency nowadays).
+
+Summary
+An object store is a flat repository where each file (object) has a unique identifier, metadata, and content, often accessed via a REST API.
+It’s excellent for storing huge amounts of unstructured data (images, videos, backups, logs) with high durability and low cost.
+Whether you’re saving user photos, enterprise backups, or building a data lake, object storage is a go-to solution for modern, scalable data needs.

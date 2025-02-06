@@ -1,0 +1,43 @@
+Write-around caching is a caching strategy where write operations bypass the cache entirely and go straight to the underlying data store (like a database).
+The idea is that when data is written, it is not immediately stored in the cache.
+The cache only gets updated when a read request comes in and finds that the data isn't already there, at which point the data is then fetched from the main data store and added to the cache.
+
+How Does It Work?
+Writing Data:
+When your application writes or updates data, the system sends that write directly to the database.
+The cache is not updated at this time.
+
+Reading Data:
+When a read request is made for that data, the system first checks the cache.
+If the data is not in the cache (a cache miss), it is then fetched from the database.
+After fetching, the data is often placed into the cache so that future reads can be served quickly.
+
+Why Use It?
+Avoids Cache Pollution: If data is written very frequently but isn’t read often, storing every write in the cache might overload it with rarely used data.
+Optimizes Cache for Hot Data: The cache remains dedicated to data that is read often, ensuring that frequently accessed information stays in memory.
+Reduces Write Overhead: Since writes don’t require updating both the cache and the database, they can be processed more efficiently.
+
+Real-World Applications
+Logging Systems:
+Scenario: Consider a system that collects log data from servers. Logs are written continuously (high write rate) but individual log entries are rarely read more than once.
+Write-Around Caching Benefit: The log entries are written directly to the log storage (e.g., a distributed file system or a database) rather than filling up the cache with data that is not accessed frequently. When analysis or search is performed later, only the relevant logs are loaded into the cache.
+
+Content Publishing:
+Scenario: A blogging platform where new articles are written (published) but are not immediately read by many users.
+Write-Around Caching Benefit: When an article is published, it is written directly to the database. The cache remains reserved for popular articles that are read frequently. If someone requests the new article, it’s loaded from the database into the cache, but otherwise, the cache isn’t burdened with content that might never be revisited.
+
+Configuration Management:
+Scenario: A system that frequently updates configuration settings that are not immediately read by all parts of an application.
+Write-Around Caching Benefit: Changes are written directly to the configuration database. The cache is updated only when a component requests the current configuration, ensuring that the cache only holds data that is actively in use and avoiding unnecessary writes to the cache.
+
+E-Commerce Inventory Updates:
+Scenario: In an online store, inventory levels may update frequently as sales occur, but a customer might only check an item’s stock level occasionally.
+Write-Around Caching Benefit: Inventory changes are written directly to the main database. The cache is used to store inventory data only when a customer or system needs to read it, which prevents the cache from being filled with rapidly changing inventory data that doesn’t need to be cached continuously.
+
+Key Takeaways
+Write-Around Caching avoids updating the cache during writes, sending data straight to the database.
+It is useful in scenarios where data is written frequently but not read frequently, ensuring that the cache remains focused on hot data that benefits from fast access.
+This strategy can reduce cache pollution and optimize performance by not overloading the cache with seldom-accessed data.
+Real-World Uses: Logging systems, content publishing platforms, configuration management systems, and certain e-commerce scenarios.
+
+In simple terms, write-around caching is like writing notes directly into a notebook (database) instead of posting every note on a bulletin board (cache) unless someone specifically asks to see that note later.
